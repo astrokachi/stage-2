@@ -32,10 +32,11 @@ const getAllUsers = async (req: Request, res: Response) => {
 
 const getUser = async (req: Request, res: Response) => {
 	try {
-		const { id } = req.params;
+		const { name, id } = req.params;
 		const user = await prisma.user.findUnique({
 			where: {
-				id: id,
+				id,
+				name,
 			},
 			select: {
 				name: true,
@@ -55,11 +56,12 @@ const getUser = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
 	try {
-		const { id } = req.params;
-		const { name, email } = req.body;
+		const { name, id } = req.params;
+		const username = req.body.name;
 		const user = await prisma.user.update({
 			where: {
-				id: id,
+				name: username,
+				id,
 			},
 			select: {
 				name: true,
@@ -78,10 +80,11 @@ const updateUser = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
 	try {
-		const { id } = req.params;
+		const { id, name } = req.params;
 		const user = await prisma.user.delete({
 			where: {
 				id: id,
+				name,
 			},
 			select: {
 				name: true,

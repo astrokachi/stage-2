@@ -10,5 +10,6 @@ import {
 
 router.route("/").get(getAllUsers).post(createUser);
 router.route("/:id").get(getUser).put(updateUser).delete(deleteUser);
+router.route("/:name").get(getUser).put(updateUser).delete(deleteUser);
 
 export default router;
