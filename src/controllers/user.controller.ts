@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../prisma/connection";
+import { User } from "@prisma/client";
 
 const createUser = async (req: Request, res: Response) => {
 	try {
@@ -32,17 +33,24 @@ const getAllUsers = async (req: Request, res: Response) => {
 
 const getUser = async (req: Request, res: Response) => {
 	try {
-		const { name, id } = req.params;
-		const user = await prisma.user.findUnique({
+		const { id } = req.params;
+		let user: Partial<User>;
+		user = await prisma.user.findUnique({
 			where: {
 				id,
-				name,
 			},
 			select: {
 				name: true,
 				id: true,
 			},
 		});
+		if (!user) {
+			user = await prisma.user.findUnique({
+				where: {
+					name: id,
+				},
+			});
+		}
 		if (!user) {
 			return res.status(404).json({ error: "User not found" });
 		} else {
@@ -56,11 +64,11 @@ const getUser = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
 	try {
-		const { name, id } = req.params;
+		const { id } = req.params;
 		const username = req.body.name;
-		const user = await prisma.user.update({
+		let user: Partial<User>;
+		user = await prisma.user.update({
 			where: {
-				name: username,
 				id,
 			},
 			select: {
@@ -68,9 +76,23 @@ const updateUser = async (req: Request, res: Response) => {
 				id: true,
 			},
 			data: {
-				name: name,
+				name: username,
 			},
 		});
+		if (!user) {
+			user = await prisma.user.update({
+				where: {
+					name: id,
+				},
+				select: {
+					name: true,
+					id: true,
+				},
+				data: {
+					name: username,
+				},
+			});
+		}
 		return res.json({ message: "successfully updated user name", user });
 	} catch (error) {
 		console.error("Error updating user:", error);
@@ -81,16 +103,27 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
 	try {
 		const { id, name } = req.params;
-		const user = await prisma.user.delete({
+		let user: Partial<User>;
+		user = await prisma.user.delete({
 			where: {
-				id: id,
-				name,
+				id,
 			},
 			select: {
 				name: true,
 				id: true,
 			},
 		});
+		if (!user) {
+			user = await prisma.user.delete({
+				where: {
+					name: id,
+				},
+				select: {
+					name: true,
+					id: true,
+				},
+			});
+		}
 		return res.json({ message: "successfully deleted user", user });
 	} catch (error) {
 		console.error("Error deleting user:", error);
