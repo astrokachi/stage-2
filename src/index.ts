@@ -3,6 +3,7 @@ import prisma from "./prisma/connection";
 import userRoutes from "./routes/user.route";
 import { errorHandler } from "./errors/errorHandler";
 
+const port = process.env.PORT || 3006;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -13,7 +14,7 @@ app.get("/", (req, res) => {
 	console.log("Hello World");
 });
 
-app.listen(3000, async () => {
+app.listen(port, async () => {
 	await prisma.$connect();
-	console.log("Server is running on port 3000");
+	console.log("Server is running on port ", port);
 });
