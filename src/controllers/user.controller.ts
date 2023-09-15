@@ -114,23 +114,15 @@ const deleteUser = async (req: Request, res: Response) => {
 				where: {
 					name: id,
 				},
-				select: {
-					name: true,
-					id: true,
-				},
 			});
 		if (!user) {
 			await prisma.user.delete({
 				where: {
 					id,
 				},
-				select: {
-					name: true,
-					id: true,
-				},
 			});
 		}
-		return res.json({ message: "successfully deleted user", user });
+		return res.json({ message: "successfully deleted user" });
 	} catch (error) {
 		console.error("Error deleting user:", error);
 		return res.status(500).json({ error: "Internal server error" });
