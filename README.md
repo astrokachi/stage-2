@@ -50,8 +50,6 @@ This project provides a REST API for CRUD (Create, Read, Update, Delete) operati
   "user": {
     "id": "12345",
     "name": "John Doe",
-    "age": 30,
-    "email": "johndoe@example.com"
   }
 }
 ```
@@ -66,8 +64,6 @@ json
 ```json
 {
   "name": "Updated Name",
-  "age": 35,
-  "email": ""
 }
 ```
 
@@ -110,7 +106,7 @@ Here are some sample API usage examples using cURL:
 
 
 ``` curl
-curl -X POST -H "Content-Type: application/json" -d '{"name": "John Doe", "age": 30, "email": "johndoe@example.com"}' http://localhost:3000/api
+curl -X POST -H "Content-Type: application/json" -d '{"name": "John Doe"}' http://localhost:3000/api
 ```
 * Fetch details of a user:
 
