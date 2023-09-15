@@ -67,22 +67,26 @@ const updateUser = async (req: Request, res: Response) => {
 		const { id } = req.params;
 		const username = req.body.name;
 		let user: Partial<User>;
-		user = await prisma.user.update({
-			where: {
-				id,
-			},
-			select: {
-				name: true,
-				id: true,
-			},
-			data: {
-				name: username,
-			},
-		});
-		if (!user) {
+
+		user = await prisma.user.findUnique({ where: { name: id } });
+		if (user)
 			user = await prisma.user.update({
 				where: {
 					name: id,
+				},
+				select: {
+					name: true,
+					id: true,
+				},
+				data: {
+					name: username,
+				},
+			});
+
+		if (!user) {
+			user = await prisma.user.update({
+				where: {
+					id,
 				},
 				select: {
 					name: true,
@@ -104,17 +108,19 @@ const deleteUser = async (req: Request, res: Response) => {
 	try {
 		const { id, name } = req.params;
 		let user: Partial<User>;
-		user = await prisma.user.delete({
-			where: {
-				id,
-			},
-			select: {
-				name: true,
-				id: true,
-			},
-		});
+		user = await prisma.user.findUnique({ where: { name: id } });
+		if (user)
+			await prisma.user.delete({
+				where: {
+					id,
+				},
+				select: {
+					name: true,
+					id: true,
+				},
+			});
 		if (!user) {
-			user = await prisma.user.delete({
+			await prisma.user.delete({
 				where: {
 					name: id,
 				},
