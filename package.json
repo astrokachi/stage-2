@@ -6,7 +6,7 @@
 	"scripts": {
 		"clean": "rimraf dist/",
 		"setup": "prisma db push && npx prisma generate",
-		"prestart": "npm-run-all clean build copy-assets",
+		"prestart": "npm-run-all setup build",
 		"start": "node dist/index.js",
 		"build": "tsc",
 		"dev": "nodemon src/index.ts"
